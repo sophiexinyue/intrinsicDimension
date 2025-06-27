@@ -35,6 +35,12 @@ def correlation_dim(n, r, S_n):
                 count += 1   
     return count * (2 / (n * (n-1)))
 
+
+def doubling_dim(X):
+    ### create an approximator for doubling dimension
+    ### link: https://en.wikipedia.org/wiki/Doubling_space
+    return 
+
 if __name__ == "__main__":
     print(correlation_dim(2, 1, [(0, 0), (0, 1)]))  # Example usage
     print(correlation_dim(3, (2 ** 0.5), [(0, 0), (0, 1), (1, 0)]))  # Example usage
