@@ -31,7 +31,7 @@ def synthetic_subspace(D,d,n,signal_scale=1,noise_scale=0):
     return X
 
 # synthetic datasets
-synth_data = synthetic_subspace(20,3,1000)
+#synth_data = synthetic_subspace(D=20,d=3,n=1000)
 
-print(correlation_dim(synth_data.tolist(), num_trials = 10))
-print(doubling_dim(synth_data.tolist(), num_trials = 10))
+#print(correlation_dim(synth_data.tolist(), num_trials = 10))
+#print(doubling_dim(synth_data.tolist(), num_trials = 10))

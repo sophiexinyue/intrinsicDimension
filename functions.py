@@ -107,7 +107,8 @@ def count_covers(points, r):
 
 
 def doubling_dim(X, num_trials=100, sample_size=100):
-    # try the 25th, 50th, and 75th percentile interpoint distances 
+    # randomly sampled interpoint distances to check doubling dim
+    # could also try the 25th, 50th, and 75th percentile interpoint distances , etc
     interpoint_distances = pdist(X)
     dim = 0
     for i in range(num_trials):
