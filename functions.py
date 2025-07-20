@@ -2,6 +2,7 @@ import math
 import random 
 from tqdm import tqdm
 from scipy.spatial.distance import pdist
+from scipy.spatial import KDTree
 
 
 def correlation_dim_fixed_r(r, X, sample_size):
@@ -68,9 +69,8 @@ def euclidean(p1, p2):
     return sum((a - b) ** 2 for a, b in zip(p1, p2)) ** 0.5
 
 def count_covers(points, r):
-    # This function runs in O(n^3) time, which is not ideal... maybe we can optimize it later? 
     """
-    Greedy approximation to the minimum r-cover.
+    Greedy approximation to the minimum r-cover using KD-Tree.
     At each step, pick the point that covers the most uncovered points.
     
     Parameters
@@ -85,22 +85,25 @@ def count_covers(points, r):
     int
         Number of r-balls needed to cover all points.
     """
-    uncovered = set(points)
+    tree = KDTree(points)
+    n = len(points)
+    all_indices = set(range(n))
+    uncovered = set(all_indices)
     centers = []
 
     while uncovered:
-        best_center = None # best_center is the point that currently covers the most uncovered points.
-        max_covered = 0 # max_covered is the number of uncovered points that best_center can cover.
-        best_covered_set = set() # best_covered_set is the actual set of points that best_center covers.
+        best_center = None
+        best_covered_set = set()
 
-        for p in uncovered:
-            covered = {q for q in uncovered if euclidean(p, q) <= r}
-            if len(covered) > max_covered:
-                best_center = p
+        for idx in uncovered:
+            neighbors = tree.query_ball_point(points[idx], r) # get indices of points within radius r using KD-Tree
+            covered = uncovered.intersection(neighbors) #filter the neighbors list to only include points that are still uncovered
+
+            if len(covered) > len(best_covered_set):
+                best_center = idx
                 best_covered_set = covered
-                max_covered = len(covered)
 
-        centers.append(best_center)
+        centers.append(points[best_center])
         uncovered -= best_covered_set
 
     return len(centers)
