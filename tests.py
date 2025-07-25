@@ -4,7 +4,6 @@ import numpy as np
 from IPython import embed
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
-import numpy as np
 
 """# Load the PBMC3K dataset (Peripheral Blood Mononuclear Cells, ~3k cells)
 adata = sc.datasets.pbmc3k().X.toarray()
@@ -45,8 +44,8 @@ plt.xlabel('Principal component')
 plt.ylabel('Eigenvalue (explained variance)')
 plt.title('PCA Spectrum (Scree Plot)')
 plt.grid(True)
-plt.show()
 plt.savefig("pca_scree_plot.png")
+plt.show()
 
 #print(correlation_dim(synth_data.tolist(), num_trials = 10))
 #print(doubling_dim(synth_data.tolist(), num_trials = 10))
