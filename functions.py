@@ -3,7 +3,7 @@ import random
 from tqdm import tqdm
 from scipy.spatial.distance import pdist
 from scipy.spatial import KDTree
-
+import numpy as np
 
 def correlation_dim_fixed_r(r, X, sample_size):
     """
@@ -116,13 +116,31 @@ def doubling_dim(X, num_trials=100, sample_size=100):
     dim = 0
     for i in range(num_trials):
         r = random.choice(interpoint_distances)
-        dim += doubling_dim_fixed_r(r,X, sample_size=sample_size)
+        dim += doubling_dim_fixed_r(r,X, sample_size) # sample size
     return dim / num_trials
 
 
+# n points in a d-dimensional subspace of R^D
+def synthetic_subspace(D,d,n,signal_scale=1,noise_scale=0):
 
+    # random unitary matrix
+    assert D >= d, "Ambient dimension D must be >= subspace dimension d"
+    
+    # Random orthonormal basis for a d-dimensional subspace of R^D
+    random_matrix = np.random.randn(D,d)
+    Q, _ = np.linalg.qr(random_matrix)  # Q has shape (D, d)
 
-def doubling_dim_fixed_r(X, r, num_centers):
+    # Sample n points in R^d
+    points_subspace = np.random.randn(n,d) * signal_scale
+
+    # Map points into R^D
+    X = points_subspace @ Q.T  # shape (n, D)
+
+    X += np.random.randn(n,D) * noise_scale
+
+    return X
+
+def doubling_dim_fixed_r(X, r, sample_size):
     """ Approximator for the doubling dimension of a metric space.
 
     Parameters
@@ -131,7 +149,7 @@ def doubling_dim_fixed_r(X, r, num_centers):
         Set of points in the metric space, where each point is represented as a tuple of coordinates.
     r : float
         Radius for the neighborhood around each point.
-    num_centers : int
+    sample_size : int
         Number of random centers to sample from the set of points.
 
     Returns
@@ -143,7 +161,7 @@ def doubling_dim_fixed_r(X, r, num_centers):
     ### link: https://en.wikipedia.org/wiki/Doubling_space
     X = [tuple(p) for p in X]
     M_vals = []
-    for i in tqdm(range(num_centers)):
+    for i in tqdm(range(sample_size)):
         x = random.choice(X)
         ball = [y for y in X if euclidean(x, y) < r]
         M = count_covers(ball, r / 2)
