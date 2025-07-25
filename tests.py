@@ -6,8 +6,6 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
 
-pca = PCA()
-
 """# Load the PBMC3K dataset (Peripheral Blood Mononuclear Cells, ~3k cells)
 adata = sc.datasets.pbmc3k().X.toarray()
 
@@ -37,6 +35,8 @@ def synthetic_subspace(D,d,n,signal_scale=1,noise_scale=0):
 
 # synthetic datasets
 synth_data = synthetic_subspace(D=20,d=3,n=1000)
+
+pca = PCA()
 pca.fit(synth_data)
 
 plt.figure(figsize=(8, 4))
